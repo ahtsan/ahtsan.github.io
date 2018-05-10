@@ -41,8 +41,8 @@
                 <div class="navbar-collapse collapse ">
                     <ul class="nav navbar-nav">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="project_plan.html">Project Plan</a></li>
                         <li class="active"><a href="report.html">Report</a></li>
+												<li><a href="demo.html">Demo</a></li>
                     </ul>
                 </div>
 		    </div>
@@ -51,7 +51,7 @@
 	<section id="featured" style="background-image: url('img/cover.jpg'); background-size: cover; background-repeat:   no-repeat; background-position: center center;">
 	<div class="container">
 		<div class="title_container">
-			<h1 class="title aligncenter"> Report </h1> 
+			<h1 class="title aligncenter"> Report </h1>
 <!-- 			<h5 class="subtitle aligncenter"> Robot navigation trained in simulation </h5> -->
 		</div>
 	</div>
@@ -67,31 +67,208 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-			<div class="aligncenter">
-			</div>
-				<p>
-					Coming soon
-				</p>
+				<h1><u>Introduction </u></h1>
+
+					Safe navigation in environments with obstacles is fundamental
+					for mobile robots to perform various tasks. Conventional approaches generally search for optimal
+					control to avoid collision based on the geometry or topological mapping of the environment.
+					Environments were perceived as a geometrical world and decisions were only made with preliminary
+					features detected. Robots often follow specific rules and thus it would be hard to adapt to a new
+					environment that would require strenuous effort for different settings. With the advance of machine
+					learning, people begin to adapt machine learning techniques on robotic problems. Additionally,
+					simulation techniques have been improved along with computer hardware upgrades, enabling computers
+					to simulate and render authentic graphics. One of the biggest constraints in robotics is hardware.
+					It can be dangerous if a robot performs a task poorly in real world, causing collision and even more
+					serious consequences. Collision avoidance, in particular, requires the robot to explore and navigate
+					in an environment full of obstacles with collision-free trajectories. As a result, safety is one of
+					the biggest concerns in collision avoidance.
+
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
+				<h1><u> Methodology </u></h1>
+				<h2> Algorithm </h2>
+
+					Deep Q-learning is an good example of DRL. In the context of Q-Learning, a DNN can be used to replace
+					the action-value function.  This enables processing of high-dimensional data and thus Q-Learning can
+					be applied on more complex problems. It stabilized the training of action value function approximation
+					with the help of experience replay and target network, which will be discussed below.
+					<br>
+					<b>Experience replay</b>
+					Experience replay refers to the playback of the experiences stored in a replay memory.  After each
+					action, an experience in the form of < s,a,r,s′> will be  saved, which are current state,  action
+					performed,  reward  and  the  next state, respectively.  The experiences are then used to train the network.
+					One way is to select the replays subsequently.  However, it may cause overfitting or lead  to  local
+					minimum.  Instead,  drawing  minibatches  from  the  replay memory randomly would break the similarity
+					of subsequent training samples and avoid the problems above.
+					<br>
+					<b>Target network </b>
+					The  target  network  refers  to  the  usage  of  an  extra  network  to  store  the action-values.
+					The idea is to separate one network into two, where one used to choose actions and the another one is
+					responsible to store the action-values. In contrast, frequent shift of network values will cause
+					destabilization when using  a  single  network.   Therefore,  by  separating  the  network  and
+					updating the target network slowly, it is found that it stabilized the training process.
+					The update of action-value then becomes Q(s,a) = r + γQ′(s′,argmax(Q(s′,a))) where Q and Q′ represent
+					the two separate networks. It  presented  an  end-to-end  reinforcement  learning  approach,
+					only  required minimal  domain  knowledge,  for  instance,  images  or  game  scores.   In  addition,
+					the trained network with the same structure and hyperparameters was illustrated to be capable of being
+					applied to many different tasks, which is 49 Atari games, and achieved good results,
+					even comparably to a human professional player.
+
+				<h2> Network Structure </h2>
+				It takes four consecutive depth images  as  input,  processed  by  a  CNN  followed  with  a
+					dueling  DQN.  The output  of  the  network  are  the  q-values  (or  likelihood)  of  each  linear
+					and angular action.  The best action is simply the one with highest q-value.  The following two
+					extensions were not present in the original DQN. They were adopted  after  experiments  which  proved
+					the  extensions  to  be  beneficial  to the performance of the network.
+					<br>
+					<b> Dueling network </b> Proposed the
+					idea of state-value function V(s) and advantage function A(s,a), namely the dueling network architecture,
+					in contrast to the conventional  action-value  function  Q(s,  a). The  state-value  function  V(s)
+					represented  how  good  it  is  to  be  in  the  states and  advantage  function  A(s,a) represented
+					how much better taking a certain action would be compared to the  other  possible  actions.
+					The  two  functions  were  combined  to  estimate Q(s, a), for faster convergence. The corresponding action-value function then becomes
+					Q(s,a) = V(s) +A(s,a)
+				<br>
+				<b>Dropout</b>
+					To avoid overfitting in training phrase.
+					The key idea was to randomly drop units (along with their connections) from the neural network
+					during training.
+
+				<img src="img/src/network_structure.png">
+				<h2> Simulation Environment </h2>
+
+					This  project  uses  Unreal  Engine  4  (UE4)  to  simulate  the  virtual  training environments,  a
+					game  engine  that  allows  game  developers  to  design  and build games, simulations, and visualizations.
+					UnrealCV is an open-source plugin that enables access and modification of the internal data structures
+					of the games.  This project uses UnrealCV for communication between UE4 and the reinforcement learning
+					module implemented with Keras, a high-level neural networks API written in Python and capable of
+					running on top of TensorFlow, CNTK, or Theano. Two simulation environments were constructed: <i>Corridor</i>
+					and <i>Generic map</i>.
+					<h3> Corridor </h3>
+					<img src="img/src/simulation_1.png" width="500" height="500" alt="Corridor map">
+					<h3> Generic map </h3>
+					<img src="img/src/map1.png" alt="Generic map">
+					<img src="img/src/map2.png" alt="Generic map">
+					<img src="img/src/map3.png" alt="Generic map">
+					<img src="img/src/map4.png" alt="Generic map">
+					<br>
+					Randomly built from the four blocks below (begin, left, right, straight)
+					<br>
+					<img src="img/src/block-begin.png" width="200" height="200" alt="Generic map">
+					<img src="img/src/block-left.png" width="200" height="200" alt="Generic map">
+					<img src="img/src/block-right.png" width="200" height="200" alt="Generic map">
+					<img src="img/src/block-straight.png" width="200" height="200" alt="Generic map">
+					<br>
+					where yellow circles indicate obstacles (also randomly located), red lines indicate the boundaries and red circle indicates the agent
+					<br>
+					<img src="img/src/open_space_top_view.png" alt="Corridor map">
+
+
+				<h2> Learning Overview </h2>
+
+					The agent interacted with the environment and chose random actions basedon a probability index
+					which decreased from 1 to 0.1 over time.  After the agent chose an action, reward was given to the agent and
+					once collision was detected, the episode will restart and the agent will be spawned at next random
+					available location.  During training, the agent will store its experience into a buffer andl earn
+					from the buffer at the same time. Intuitively the agent will keep learning by distinguishing actions
+					with high rewards under different circumstances.
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<h1> <u>Experiment and Result</u> </h1>
+				<h2> Setup </h2>
+			The agent was spawned at a random available
+				location and no specific tasks or orders were assigned to them. For the map <b>Corridor</b>, the agent can choose among five
+				different angular actions (0◦,±10◦,±20◦) and two different linear actions (move forward or stay).
+				For simplicity,the distance travelled for moving forward was fixed to be 20 units.  When collision was
+				detected, the episode will restart and the agent will be spawnedat next random available location.
+				 Agent was given images from the previous 3 frames appended with the current frame. 
+				 <br>
+				 For the map <b>Generic map</b>, there will be two networks with either 4 images or 1 image given as input. Hence in total, including Corridor, there would be three different networks.
+				 <h2> Reward </h2>
+				 Reward refers to the score the agent obtained according to an action in orderto evaluate how
+					 well an action is with respect to the current state the agentis in.  The reward is defined
+					 as R = kvcos4θ where v is the velocity, θ is the angular velocity and k is a constant for reward
+					 normalization.  Reward for collision is -10.
+					 <h2> Comparison </h2>
+					 Three networks/policies were compared on two different simulation environment.For  convenience,
+					 P<sub>Cor</sub> refers  to  the  policy  trained in Corridor while P<sub>Gen1</sub> and P<sub>Gen4</sub>
+					 refer to the policy trained in Generic map with 1 image input and 4 images input respectively.
+					 <br>
+					 <br>
+					 <table style="width:100%">
+					   <tr>
+					     <th>Policy</th>
+					     <th>Tested in</th>
+							 <th>Reward<sub>average</sub>*</th>
+					     <th>SD<sup>*</sup></th>
+					   </tr>
+					   <tr>
+					     <td>P<sub>Cor</sub></td>
+							 <td>Corridor</td>
+							 <td><b>9.84</b></td>
+							 <td><b>0.035</b></td>
+					   </tr>
+					   <tr>
+							 <td>P<sub>Gen4</sub></td>
+							 <td>Corridor</td>
+							 <td>9.78</td>
+							 <td>0.083</td>
+					   </tr>
+						 <tr>
+							 <td>P<sub>Gen1</sub></td>
+							 <td>Corridor</td>
+							 <td>6.73</td>
+							 <td>3.4</td>
+						 </tr>
+						 <tr>
+							 <td>P<sub>Cor</sub></td>
+							 <td>Generic map</td>
+							 <td>9.25</td>
+							 <td>1.47</td>
+						 </tr>
+						 <tr>
+							 <td>P<sub>Gen4</sub></td>
+							 <td>Generic map</td>
+							 <td><b>9.72</b></td>
+							 <td><b>0.81</b></td>
+						 </tr>
+						 <tr>
+							 <td>P<sub>Gen1</sub></td>
+							 <td>Generic map</td>
+							 <td>6.90</td>
+							 <td>2.65</td>
+						 </tr>
+					 </table>
+					 <br>
+					 The table shows performance comparison for two different networks.  Average reward and standard deviation were
+					 obtained from 100 episodes, each episode with 500 steps.  Maximum average reward is 10.00. The
+					 result showed an expected correlation between training and testing environment.   Each  of  the
+					  policy  was  expected  to  perform  better  at  the environment  which  it  was  trained  in.
+						However,P<sub>Cor</sub> outperform P<sub>Gen1</sub> in both environments.
+				<h2> Intuition</h2>
+				Intuitively Corridor is of less complexity,  hence the features are less vague and the agent may learn better.  In addition, 4 consecutive images are fed to P<sub>Cor</sub> while only 1 was fed to P<sub>Gen1</sub>.  Motion information was captured in the 4 consecutive images which may cause P<sub>Cor</sub> to be more stable (smaller SD). Along  with  training  input  and  environment,  reward  function  here  may also be a crucial factor in determining the performance.  The reward function was designed to encourage walking straight without collision.  Corridor environment somehow provided a clear and suitable environment to the agent to learn that, since there was mainly straight road and no obstacles throughout the path.  Meanwhile, Generic map consisted of numbers of corners and random  obstacles. This,  however,  caused  the  agent  to actively learns to turn, yielding a smaller reward.
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<h1><u> Conclusion </u></h1>
+Collision avoidance in robot navigation is an essential area in robotic applications.  People in the past adopted constraint-based methods for this problem, while recently majority tended to use learning-based methods.  This report proposes a simulation training framework, namely SimNav, and investigates the possibility to train a robot to navigate safely by performing training in SimNav, without any real world data. State-of-the-art reinforcement learning algorithms with different variation were also compared under different environment.
+				</div>
+			</div>
+		<div class="row">
+			<div class="col-lg-12">
 				<div class="solidline">
 				</div>
+								Detail report can be found here: <a href="FYP_2017_Final.pdf"> link </a>
 			</div>
 		</div>
 	</div>
 	</section>
-
-	<footer>
-		<div id="sub-footer">
-			<div class="container">
-				<div class="row">
-					<script src="footer.js"></script>
-				</div>
-			</div>
-		</div>
-	</footer>
 </div>
 
 <a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
